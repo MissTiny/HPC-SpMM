@@ -73,7 +73,7 @@ void printMatrix(int *A, int numRow, int numCol)
 int main()
 {
 
-    // Read data for Sparse matrix A from MTX file, 
+    // Read data for Sparse matrix A from CSV file, 
     // Then we will have row1 and col1
 
     
