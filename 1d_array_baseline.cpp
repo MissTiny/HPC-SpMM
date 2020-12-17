@@ -1,127 +1,68 @@
-/*
-The following program performs Matrix multiplication: C = A * B where:
-A and B can have different dimensions as long as the numCol(A) is same as numRum(B)
-A is M by N and B is N by K
-
-M = row1 = numRow(A)
-N = col1 = numCol(A)
-N = row2 = numRow(B)
-K = col2 = numCol(B)
-
-Performing C = A*B for 2D matricies
-
-Note:
-int** ary = new int[sizeY][sizeX]
-
-Can be: 
-int *ary = new int[sizeX*sizeY];
-
-Then ary[i][j] is rewritten as:
-ary[i*sizeY+j]
-*/
-
 #include <iostream>
 using namespace std;
 
-// Number of rows for matrix A
-#define row1 64
-
-// Number of cols for matrix A
-#define col1 8
-
-// Number of rows for matrix B
-#define row2 8
-
-// Number of cols for matrix B
-#define col2 64
-
-/* CPU Matrix Multiply 
-C[i][j] += A[i][k] * B[k][j];
-C[i*z+j] += A[i*y+k] * B[k*z+j];
-Non-blocked
-Single Threaded
-*/ 
-void matrixMultiplyCPU(int *A, int *B, int *C, int x, int y, int z)
+int main()
 {
-    // CPU Matrix Multiplication
-    for (int i = 0; i < x; i++)
+    //Load A
+	ifstream fin("higgs-twitter.mtx");
+	//ifstream fin("test2.mtx");
+	while (fin.peek() == '%') fin.ignore(2048, '\n');
+
+	int M_A, K_A, L_A;
+	fin >> M_A >> K_A >> L_A;
+
+	//B as a normal Matrix
+	cout << "start A as normal matrix construction\n";
+	//int* V_B = new int[K_B][N_B];
+	int V_A[M_A*K_A] = {0};
+	for (int i = 0; i < L_B; i++) {
+		int row_A, col_A, value_A;
+		fin >> row_A >> col_A >> value_A;
+		V_A[row_A*K_A + col_A] = value_A;
+	}
+	cout << "A matrix construction finished\n";
+	fin.close();
+
+    //Loading B
+    ifstream fin("higgs-twitter.mtx");
+	//ifstream fin("test2.mtx");
+	while (fin.peek() == '%') fin.ignore(2048, '\n');
+	int K_B, N_B, L_B;
+	fin >> K_B >> N_B >> L_B;
+
+	//A SpMM Matrix Validation Check
+	if (K_A != K_B){
+		cout<< "Matrix A and Matrix B can not be multipled together";
+		return 1;
+	}
+	//B as a normal Matrix
+	cout << "start B as normal matrix construction\n";
+	//int* V_B = new int[K_B][N_B];
+	int V_B[K_B*N_B] = {0};
+	for (int i = 0; i < L_B; i++) {
+		int row_B, col_B, value_B;
+		fin >> row_B >> col_B >> value_B;
+		V_B[row_B*N_B+ col_B] = value_B;
+	}
+	cout << "B matrix construction finished\n";
+	fin.close();
+
+    int V_C[M_A*N_B] = {0};
+    // Multiplying matrix a and b and storing in array mult.
+	cout << "Baseline: start multiplcation" << endl;
+	auto begin = chrono::high_resolution_clock::now();
+    for(i = 0; i < M_A; ++i)
     {
-        for (int j = 0; j < z; j++)
+        for(j = 0; j < N_B; ++j)
         {
-            for (int k = 0; k < y; k++)
+            for(k = 0; k < K_A1; ++k)
             {
-                C[i*z+j] += A[i*y+k] * B[k*z+j];
-                //C[i][j] += A[i][k] * B[k][j];
+                V_C[i*N_B+j] += V_A[i*K_B+k] * V_B[k*N_B+j];
             }
         }
     }
-}
-
-// Function to print 2D Matrix
-void printMatrix(int *A, int numRow, int numCol)
-{
-    for (int i = 0; i < numRow; i++) 
-    {
-        for (int j = 0; j < numCol; j++) 
-        {
-            cout << A[i*numCol+j] << " ";
-        }
-        cout << endl;
-    }
-}
-
-int main()
-{
-
-    // Read data for Sparse matrix A from CSV file, 
-    // Then we will have row1 and col1
-
-    
-    // Allocate memory for A, B and C
-    int *A = new int[row1*col1];
-    int *B = new int[row2*col2];
-    int *C = new int[row1*col2];
-
-    // Load A with data
-    for (int i = 0; i < row1; i++) {
-        for (int j = 0; j < col1; j++) {
-            //A[i][j] = i+1;
-            A[i*col1+j] = i+1;
-        }
-    }
-
-    // Print A
-    //printMatrix(A, row1, row2);
-   
-    // Load B with data
-    for (int i = 0; i < row2; i++) {
-        for (int j = 0; j < col2; j++) {
-            // B[i][j] = j+1;
-            B[i*col2+j] = j+1;
-        }
-    }
-
-    // Print B
-    //printMatrix(B, row2, col2);
-
-    // Load C with data
-    for (int i = 0; i < row1; i++) {
-        for (int j = 0; j < col2; j++) {
-            //C[i][j] = 0;
-            C[i*col2+j] = 0;
-        }
-    }
-
-    // CPU Matrix Multiplication
-    matrixMultiplyCPU(A, B, C, row1, row2, col2);
-
-    // Print C
-    printMatrix(C, row1, col2);
-
-    // Free Memory
-    delete[] A;
-    delete[] B;
-    delete[] C;
-
+	auto end = chrono::high_resolution_clock::now();
+	chrono::duration<double> time_span= chrono::duration_cast<chrono::duration<double>>(end-begin);
+	cout << "Baseline: It took me" << time_span.count() << "seconds.";
     return 0;
 }
