@@ -75,64 +75,7 @@ int main() {
 	}
 	cout << "B matrix construction finished\n";
 	fin.close();
-	/* B as a sparse matrix
-	//matrix construct
-	cout << "start B as CSR matrix construction\n";
-	int* V_B = new int[L_B];
-	int* ROW_INDEX_B = new int[L_B];
-	int* COL_INDEX_B = new int[L_B];
-	for (int i = 0; i < L_B; i++) {
-		int row_B, col_B, value_B;
-		fin >> row_B >> col_B >> value_B;
-		ROW_INDEX_B[i] = row_B;
-		COL_INDEX_B[i] = col_B;
-		V_B[i] = value_B;
-	}
-	cout << "B matrix construction finished\n";
-	fin.close();
-	//analyse
 
-	cout << "start B analyze\n";
-	int* rowptr_B = new int[M_B + 1]; //record how many columns in this row
-	int j_B = 0;
-	for (int i = 0; i < M; i++) {
-		rowptr_B[i] = j_B;
-		while (ROW_INDEX_B[j_B] == i) {
-			j_B++;
-		}
-	}
-	rowptr_B[M_B] = j_B;
-	cout << "analyze B finished\n";
-	*/
-	/*
-	//dense vector construct
-	cout << "start construct dense vector\n";
-	int* Dense_Vector = new int[N];
-	for (int i = 0; i < N; i++) {
-		Dense_Vector[i] = 1;
-	}
-	cout << "dense vector finished" << endl;
-	*/
-	//result vector init -- without optimize
-	//int* result = new int[L];
-	/*
-	int* V_C = new int[M_A * N_B];
-	int* ROW_INDEX_C = new int[M_A * N_B];
-	int* COL_INDEX_C = new int[M_A * N_B];
-
-	cout << "CSR: start multiplcation" << endl;
-	auto begin_CSR = chrono::high_resolution_clock::now();
-	for (int i = 0; i < M_A; i++) {
-		V_C[i] = 0.0;
-		for (int k = rowptr_A[i]; k < rowptr_A[i + 1]; k++) {
-			int column_A = COL_INDEX_A[k];
-			int val_A = V_A[k];
-			result1[i] += val1 * Dense_Vector[column1];
-
-		}
-	}
-	*/
-	// C generated as normal matrix
 	int* V_C[M_A][N_B] = {0};
 
 	cout << "CSR: start multiplcation" << endl;
