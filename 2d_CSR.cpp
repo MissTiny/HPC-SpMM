@@ -64,7 +64,7 @@ int main() {
 	//analyse
 
 	cout << "start B analyze\n";
-	int* rowptr_B = new int[M_B + 1]; //record how many columns in this row
+	int* colptr_B = new int[N_B + 1]; //record how many columns in this row
 	int j_B = 0;
 	for (int j = 0; j < N_B; j++) {
 		colptr_B[i] = j_B;
