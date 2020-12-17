@@ -11,7 +11,7 @@ int main() {
     //CSR
 
 	//Loading A sparse matrix
-	ifstream fin("higgs-twitter.mtx");
+	ifstream fin("data_mtx/A0_dense.mtx");
 	//ifstream fin("test2.mtx");
 	while (fin.peek() == '%') fin.ignore(2048, '\n');
 
@@ -50,7 +50,7 @@ int main() {
 	//B as a normal Matrix
 
 
-	ifstream fin("higgs-twitter.mtx");
+	ifstream fin("data_mtx/B_sparse90.mtx");
 	//ifstream fin("test2.mtx");
 	while (fin.peek() == '%') fin.ignore(2048, '\n');
 

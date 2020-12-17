@@ -4,7 +4,7 @@ using namespace std;
 int main()
 {
     //Load A
-	ifstream fin("higgs-twitter.mtx");
+	ifstream fin("data_mtx/A0_dense.mtx");
 	//ifstream fin("test2.mtx");
 	while (fin.peek() == '%') fin.ignore(2048, '\n');
 
@@ -24,7 +24,7 @@ int main()
 	fin.close();
 
     //Loading B
-    ifstream fin("higgs-twitter.mtx");
+    ifstream fin("data_mtx/B_sparse90.mtx");
 	//ifstream fin("test2.mtx");
 	while (fin.peek() == '%') fin.ignore(2048, '\n');
 	int K_B, N_B, L_B;
