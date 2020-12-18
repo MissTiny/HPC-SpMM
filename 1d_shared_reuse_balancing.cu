@@ -64,25 +64,30 @@ int main()
 	int M_A, K_A, L_A;
 	fin1 >> M_A >> K_A >> L_A;
 
-    int size_A = M_A*K_A;
+    int line_notsame = 12;
+    int size_A = (line_notsame+1)*K_A;
     int memSize_A = size_A *sizeof(double);
 	//B as a normal Matrix
 	cout << "start A as normal matrix construction\n";
 	//int* V_B = new int[K_B][N_B];
-	double* V_A = new double[M_A *K_A];
+    double* V_A = new double[M_A *K_A];
+    double* new_A = new double[(line_notsame+1)*K_A];
 	for (int i = 0; i < L_A; i++) {
 		int row_A, col_A;
 		double value_A;
 		fin1 >> row_A >> col_A >> value_A;
 		//ROW_INDEX_B[i] = row_B;
 		//COL_INDEX_B[i] = col_B;
-		V_A[row_A * K_A + col_A] = value_A;
+        V_A[row_A * K_A + col_A] = value_A;
+        if(row_A<line_notsame){
+            new_A[row_A * K_A + col_A] = value_A;
+        }
 	}
 	cout << "A matrix construction finished\n";
 	fin1.close();
 	//matrix construct
     //Loading B
-    ifstream fin2("data_mtx/B_sparse90.mtx");
+    ifstream fin2("data_mtx/B_sparse90_loadbalancing.mtx");
 	//ifstream fin("test2.mtx");
 	//while (fin.peek() == '%') fin.ignore(2048, '\n');
 	int K_B, N_B, L_B;
@@ -107,16 +112,16 @@ int main()
 	cout << "B matrix construction finished\n";
 	fin2.close();
 
-    int size_C = M_A*N_B;
+    int size_C = (line_notsame+1)*N_B;
     int memSize_C = size_C *sizeof(double);
-    double* V_C = new double[M_A*N_B];
-    for (int m=0; m<M_A;m++){
+    double* V_C = new double[(line_notsame+1)*N_B];
+    for (int m=0; m<(line_notsame+1);m++){
         for (int n=0;n<N_B;n++){
             V_C[m*N_B+n] = 0;
         }
     }
     cudaMalloc((void **) &d_A, memSize_A);
-    cudaMemcpy(d_A, V_A,memSize_A,cudaMemcpyHostToDevice);
+    cudaMemcpy(d_A, new_A,memSize_A,cudaMemcpyHostToDevice);
 
     cudaMalloc((void **) &d_B, memSize_B);
     cudaMemcpy(d_B, V_B,memSize_B,cudaMemcpyHostToDevice);

@@ -82,7 +82,7 @@ int main()
 	fin1.close();
 	//matrix construct
     //Loading B
-    ifstream fin2("data_mtx/B_sparse90.mtx");
+    ifstream fin2("data_mtx/B_sparse90_loadbalancing.mtx");
 	//ifstream fin("test2.mtx");
 	//while (fin.peek() == '%') fin.ignore(2048, '\n');
 	int K_B, N_B, L_B;
