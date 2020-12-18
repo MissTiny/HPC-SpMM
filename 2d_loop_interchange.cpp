@@ -17,12 +17,12 @@ int main()
 	//B as a normal Matrix
 	cout << "start A as normal matrix construction\n";
 	//int* V_B = new int[K_B][N_B];
-	double V_A[M_A*K_A] = {0};
+	double V_A[M_A][K_A] = {0};
 	for (int i = 0; i < L_A; i++) {
 		int row_A, col_A;
 		double value_A;
 		fin1 >> row_A >> col_A >> value_A;
-		V_A[row_A*K_A + col_A] = value_A;
+		V_A[row_A][col_A] = value_A;
 	}
 	cout << "A matrix construction finished\n";
 	fin1.close();
@@ -42,17 +42,17 @@ int main()
 	//B as a normal Matrix
 	cout << "start B as normal matrix construction\n";
 	//int* V_B = new int[K_B][N_B];
-	double V_B[K_B*N_B] = {0};
+	double V_B[K_B][N_B] = {0};
 	for (int i = 0; i < L_B; i++) {
 		int row_B, col_B;
 		double value_B;
 		fin2 >> row_B >> col_B >> value_B;
-		V_B[row_B*N_B+ col_B] = value_B;
+		V_B[row_B][col_B] = value_B;
 	}
 	cout << "B matrix construction finished\n";
 	fin2.close();
 
-    double V_C[M_A*N_B] = {0};
+    double V_C[M_A][N_B] = {0};
     // Multiplying matrix a and b and storing in array mult.
 	cout << "1d loop interchange: start multiplcation" << endl;
 	auto begin = chrono::high_resolution_clock::now();
@@ -62,12 +62,12 @@ int main()
         {
             for(int j = 0; j < N_B; ++j)
             {
-                V_C[i*N_B+j] += V_A[i*K_B+k] * V_B[k*N_B+j];
+                V_C[i][j] += V_A[i][k] * V_B[k][j];
             }
         }
     }
 	auto end = chrono::high_resolution_clock::now();
 	chrono::duration<double> time_span= chrono::duration_cast<chrono::duration<double>>(end-begin);
-	cout << "1d loop interchange: It took me " << time_span.count() << " seconds.";
+	cout << "2d loop interchange: It took me " << time_span.count() << " seconds.";
     return 0;
 }

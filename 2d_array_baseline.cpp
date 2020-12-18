@@ -1,28 +1,32 @@
 #include <iostream>
+#include <ctime>
+#include <chrono>
+#include <fstream>
 using namespace std;
 
 int main()
 {
 
     //Load A
-	ifstream fin("data_mtx/A0_dense.mtx");
+	ifstream fin1("data_mtx/A0_dense_float.mtx");
 	//ifstream fin("test2.mtx");
-	while (fin.peek() == '%') fin.ignore(2048, '\n');
+	//while (fin.peek() == '%') fin.ignore(2048, '\n');
 
 	int M_A, K_A, L_A;
-	fin >> M_A >> K_A >> L_A;
+	fin1 >> M_A >> K_A >> L_A;
 
 	//B as a normal Matrix
 	cout << "start A as normal matrix construction\n";
 	//int* V_B = new int[K_B][N_B];
-	int V_A[M_A][K_A] = {0};
-	for (int i = 0; i < L_B; i++) {
-		int row_A, col_A, value_A;
-		fin >> row_A >> col_A >> value_A;
+	double V_A[M_A][K_A] = {0};
+	for (int i = 0; i < L_A; i++) {
+		int row_A, col_A;
+		double value_A;
+		fin1 >> row_A >> col_A >> value_A;
 		V_A[row_A][col_A] = value_A;
 	}
 	cout << "A matrix construction finished\n";
-	fin.close();
+	fin1.close();
 
     //Loading B
     ifstream fin("data_mtx/B_sparse90.mtx");
@@ -39,24 +43,25 @@ int main()
 	//B as a normal Matrix
 	cout << "start B as normal matrix construction\n";
 	//int* V_B = new int[K_B][N_B];
-	int V_B[K_B][N_B] = {0};
+	double V_B[K_B][N_B] = {0};
 	for (int i = 0; i < L_B; i++) {
-		int row_B, col_B, value_B;
+		int row_B, col_B;
+		double value_B;
 		fin >> row_B >> col_B >> value_B;
 		V_B[row_B][col_B] = value_B;
 	}
 	cout << "B matrix construction finished\n";
 	fin.close();
 
-    int V_C[M_A][N_B] = {0};
+    double V_C[M_A][N_B] = {0};
     // Multiplying matrix a and b and storing in array mult.
-	cout << "Baseline: start multiplcation" << endl;
+	cout << "2d array: start multiplcation" << endl;
 	auto begin = chrono::high_resolution_clock::now();
-    for(i = 0; i < M_A; ++i)
+    for(int i = 0; i < M_A; ++i)
     {
-        for(j = 0; j < N_B; ++j)
+        for(int j = 0; j < N_B; ++j)
         {
-            for(k = 0; k < K_A1; ++k)
+            for(int k = 0; k < K_A; ++k)
             {
                 V_C[i][j] += V_A[i][k] * V_B[k][j];
             }
@@ -64,6 +69,6 @@ int main()
     }
 	auto end = chrono::high_resolution_clock::now();
 	chrono::duration<double> time_span= chrono::duration_cast<chrono::duration<double>>(end-begin);
-	cout << "Baseline: It took me" << time_span.count() << "seconds.";
+	cout << "2d array: It took me " << time_span.count() << " seconds.";
     return 0;
 }
